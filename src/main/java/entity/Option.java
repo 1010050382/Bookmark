@@ -1,11 +1,13 @@
 package entity;
 
 import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Option {
     private int type;
     private boolean hasArg;
