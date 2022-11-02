@@ -12,7 +12,7 @@ public class OptionConstants {
     private static final boolean OPEN_FILE_HAS_ARG = true;
     private static final boolean CREATE_FILE_HAS_ARG = true;
     private static final boolean EDIT_FILE_HAS_ARG = true;
-    private static final boolean SAVE_HAS_ARG = false;
+    private static final boolean SAVE_HAS_ARG = true;
     private static final boolean UNDO_HAS_ARG = false;
     private static final boolean REDO_HAS_ARG = false;
     private static final boolean READ_BOOKMARK_HAS_ARG = true;
