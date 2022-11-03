@@ -11,11 +11,12 @@ public class Manager {
     private BookmarkNode bookmarkNodes;
 
     private BookmarkNode lastLoadedNode;
-    private LinkedList<BookmarkNode> historyMd;
+    private LinkedList<BookmarkNode> historyMd ;
     private LinkedList<BookmarkNode> matchNode;
 
     private LinkedList<Link> matchLink;
     private String lastCommand;
+    private String curCommand;
     private String filePath;
 
 
@@ -26,6 +27,7 @@ public class Manager {
         historyMd = new LinkedList<>();
         matchNode = new LinkedList<>();
         saveStr = new StringBuilder();
+        curCommand = "";
         lastCommand = "";
         filePath ="";
     }
@@ -34,8 +36,14 @@ public class Manager {
         private static final Manager INSTANCE = new Manager();
     }
 
-    public void clearAllBookmark() {
-        this.bookmarkNodes = new BookmarkNode(0,"root");;
+    public void clearAll() {
+        bookmarkNodes = new BookmarkNode(0,"root");
+        historyMd = new LinkedList<>();
+        matchNode = new LinkedList<>();
+        saveStr = new StringBuilder();
+        curCommand = "";
+        lastCommand = "";
+        filePath ="";
     }
 
     public void setBookmarkNodes(BookmarkNode node){

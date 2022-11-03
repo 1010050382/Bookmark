@@ -19,8 +19,8 @@ public class Main {
             try {
                 String[] inputArgs = parseInputCommand2StringArray(input);
                 Option option = parseInputArgs2Option(inputArgs);
+                manager.setCurCommand(input);  //存储最后的操作
                 executeOption(option);
-                manager.setLastCommand(input);  //存储最后的操作
             } catch (ParseException e) {
                 System.out.println(e.getMessage());
             } catch (IllegalArgumentException e) {

@@ -20,7 +20,7 @@ public class ManagerController {
 //    ManagerService managerService;
 
     public static ManagerService managerService = ManagerService.getInstance();
-    public static   Manager manager = Manager.getInstance();
+    public static Manager manager = Manager.getInstance();
     public static Pattern titlePattern = Pattern.compile("^#{1,3}\\s[A-Za-z1-9]+$");
     public static Pattern linkPattern = Pattern.compile("^\\[[A-Za-z1-9\\s]+]\\([a-zA-z]+://\\S*\\)$");
 
@@ -88,43 +88,45 @@ public class ManagerController {
                 System.exit(0);
                 break;
             case 1:
-                managerService.ShowTree(manager.getBookmarkNodes());
+                //managerService.ShowTree(manager.getBookmarkNodes());
+                managerService.ShowTree2(manager.getBookmarkNodes().getNextLevelBookmarkNode());
                 break;
 
-                //TODO 1:  show tree，显示书签栏的树形结构
+                //show tree，显示书签栏的树形结构
             case 2:
-                //TODO 2:  ls tree，显示当前的文件目录结构 ？ （不是很确定）
+                managerService.LsTree();
+                break;
+                // ls tree，显示当前的文件目录结构 ？ （不是很确定）
             case 3:
-                managerService.BackUpAddDelete();
+
                 //managerService.AddTittle(option.getArgs().get(0),option.getArgs().size()>1?option.getArgs().get(1):"");
                 managerService.AddTitle(option.getArgs().get(0),option.getArgs().size()>1?option.getArgs().get(1):"");
+                managerService.BackUpAddDelete();
                 break;
                 //add-title "title" 直接在当前工作目录下添加title
                 //add-title "title" at "title0" 在指定title下添加title，例如在1级title下添加2级title，在2级title下添加3级title
             case 5:
-                managerService.BackUpAddDelete();
                 String[] bookmark = option.getArgs().get(0).split("@");
                 managerService.AddBookmark(option.getArgs().get(1),bookmark[0],bookmark[1]);
+                managerService.BackUpAddDelete();
                 break;
                 //add-bookmark "bookmark" at "title" 在指定title下添加bookmark
             case 6:
-                managerService.BackUpAddDelete();
                 managerService.FindAndDeleteTitle(option.getArgs().get(0),manager.getBookmarkNodes());
+                managerService.BackUpAddDelete();
                 break;
                 //delete title，删除title
                 //若标题重复，需要删除所有重复标题，删除父节点需要删除所有子节点
             case 7:
-                managerService.BackUpAddDelete();
                 managerService.FindAndDeleteBookmark(option.getArgs().get(0),manager.getBookmarkNodes());
+                managerService.BackUpAddDelete();
                 break;
                 //delete bookmark，删除bookmark
             case 8:
-                manager.setMatchNode(null);
-                manager.setLastCommand(null);
-                manager.setHistoryMd(null);
-                manager.setBookmarkNodes(null);
-                managerService.parseMarkdownFile("D:/test.bmk");
+                manager.clearAll();
+                managerService.parseMarkdownFile(option.getArgs().get(0));
                 break;
+                //open-file D:/test.bmk
                 //打开文件后，当前工作目录为指定文件的书签栏，原本的工作空间放弃
                 //如果文件不存在，需要新建文件
                 //相当于执行case9 case10
@@ -142,9 +144,11 @@ public class ManagerController {
                 //undo，撤销add或者delete
             case 13:
                 managerService.Redo();
+                break;
                 //redo，撤销撤销add或者delete
             case 14:
                 managerService.ReadBookmark(option.getArgs().get(0));
+                break;
                 //read bookmark，访问书签
 
             default:

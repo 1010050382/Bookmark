@@ -1,6 +1,7 @@
 package service;
 
 import Utils.CloneUtils;
+import Utils.SaveUtils;
 import entity.BookmarkNode;
 import entity.Link;
 import entity.Manager;
@@ -8,6 +9,7 @@ import entity.Option;
 import exception.BookmarkFileFormatException;
 import exception.ParseException;
 import exception.SaveException;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
@@ -19,6 +21,7 @@ import java.util.regex.Pattern;
 
 import static controller.ManagerController.*;
 
+@Service
 public class ManagerService {
 
     private static  Boolean isFind=false;
@@ -58,6 +61,43 @@ public class ManagerService {
 
     }
 
+    /**
+     * Description: 修改为正确格式的ShowTree
+     * date: 2022/10/30 12:17
+     * @author: Haodong Li
+     * @since: JDK 1.8
+
+    */
+    public void ShowTree2(List<BookmarkNode> nodes){
+        int size = nodes.size();
+        for(int i=0;i<size;i++){
+            if(i==size-1){
+                System.out.print("   ".repeat(nodes.get(i).getLevel()));
+                System.out.println("└──"+nodes.get(i).getName());
+            }else {
+                System.out.print("   ".repeat(nodes.get(i).getLevel()));
+                System.out.println("├──"+nodes.get(i).getName());
+            }
+            for(int j=0;j<nodes.get(i).getLinks().size();j++){
+                if(j==nodes.get(i).getLinks().size()-1){
+                    System.out.print("   ".repeat(nodes.get(i).getLevel()+1));
+                    System.out.println("└──"+(nodes.get(i).getLinks().get(j).getStatus()==true?"*":"") +nodes.get(i).getLinks().get(j).toString());
+                }else {
+                    System.out.print("   ".repeat(nodes.get(i).getLevel()+1));
+                    System.out.println("├──"+(nodes.get(i).getLinks().get(j).getStatus()==true?"*":"") +nodes.get(i).getLinks().get(j).toString());
+                }
+            }
+            ShowTree2(nodes.get(i).getNextLevelBookmarkNode());
+        }
+    }
+
+    public void LsTree(){
+        if(manager.getFilePath().isEmpty()==true)
+            System.out.println("当前不是打开的文件");
+        else
+            ShowTree2(manager.getHistoryMd().getFirst().getNextLevelBookmarkNode());
+    }
+
     public void ReadBookmark(String name){
         manager.setMatchLink(new LinkedList<>());
         FindBookmark(name,manager.getBookmarkNodes());
@@ -76,11 +116,13 @@ public class ManagerService {
         try {
             GenrateSaveStr(manager.getBookmarkNodes().getNextLevelBookmarkNode());
             if(!path.isEmpty()){
-                System.out.println(manager.getSaveStr());
+                SaveUtils.TextToFile(path,manager.getSaveStr().toString());
+                //System.out.println(manager.getSaveStr());
             }else {
                 if(manager.getFilePath().isEmpty())
                     throw  new SaveException();
-                System.out.println(manager.getSaveStr());
+                SaveUtils.TextToFile(manager.getFilePath(),manager.getSaveStr().toString());
+                //System.out.println(manager.getSaveStr());
             }
         } catch (SaveException e) {
             System.out.println(e.getMessage());
@@ -114,9 +156,9 @@ public class ManagerService {
         {
             manager.getBookmarkNodes().getNextLevelBookmarkNode().add(new BookmarkNode(1,arg1));
         }else {
-           FindTitle(arg3,manager.getBookmarkNodes().getNextLevelBookmarkNode());
+           FindTitle(arg1,manager.getBookmarkNodes().getNextLevelBookmarkNode());
            if(manager.getMatchNode().size()!=0)
-               manager.getMatchNode().getFirst().addLink(new Link(arg1,arg2));
+               manager.getMatchNode().getFirst().addLink(new Link(arg2,arg3));
         }
     }
 
@@ -279,11 +321,8 @@ public class ManagerService {
      * date: 2022/10/23 18:55
      * @author: Haodong Li
      * @since: JDK 1.8
-
     */
     public void LoadBookmark(Link link){
-//        if(manager.getMatchNode().size()>0)
-//            manager.getMatchNode().getLast().addLink(link);
         if(manager.getLastLoadedNode()!=null)
             manager.getLastLoadedNode().addLink(link);
     }
@@ -344,6 +383,8 @@ public class ManagerService {
     */
     public void BackUpAddDelete(){
         try {
+            String a = manager.getCurCommand();
+            manager.setLastCommand(a);
             BookmarkNode bookmarkNode = CloneUtils.clone(manager.getBookmarkNodes());
             manager.getHistoryMd().add(bookmarkNode);
         } catch (Exception e) {
@@ -385,7 +426,7 @@ public class ManagerService {
 
     */
     public void Undo(){
-        if(manager.getHistoryMd().size()!=0){
+        if(manager.getHistoryMd()!=null&&manager.getHistoryMd().size()!=0){
             if(manager.getHistoryMd().size()>1){
                 manager.getHistoryMd().removeLast();
                 BookmarkNode lastNode = manager.getHistoryMd().getLast();
@@ -431,6 +472,7 @@ public class ManagerService {
                 parseMarkdownFileLine(line);
                 line = bufferedReader.readLine();
             }
+            manager.getHistoryMd().add(manager.getBookmarkNodes());
         } catch (FileNotFoundException e) {
             File file = new File(filePath);
             if (!file.getParentFile().exists()) {
@@ -481,7 +523,5 @@ public class ManagerService {
         }
         return null;
     }
-
-
 
 }
