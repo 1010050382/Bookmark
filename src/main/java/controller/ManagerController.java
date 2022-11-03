@@ -49,6 +49,7 @@ public class ManagerController {
     public static Option parseInputArgs2Option(String[] inputArgs) throws IllegalArgumentException, ParseException {
         int typeValue = OptionEnum.valueOf(inputArgs[0]).ordinal();
         int atTypeValue = OptionEnum.valueOf("at").ordinal();
+        int saveTypeValue = OptionEnum.valueOf("save").ordinal();
         Option option = new Option(typeValue);
         option.setHasArg(OptionConstants.HAS_ARG[option.getType()]);
         if (option.getType() == atTypeValue) {
@@ -57,12 +58,14 @@ public class ManagerController {
         if (!option.isHasArg() && inputArgs.length > 1) {
             throw new ParseException();
         }
-        if (option.isHasArg() && inputArgs.length < 2) {
+        if (option.isHasArg() && inputArgs.length < 2 && option.getType() != saveTypeValue) {
             throw new ParseException();
         }
         if (option.isHasArg()) {
-            option.addArg(inputArgs[1]);
+            option.addArg(inputArgs[inputArgs.length - 1]);
         }
+
+
         if (inputArgs.length == 4) {
             typeValue = OptionEnum.valueOf(inputArgs[2]).ordinal();
             if (typeValue != atTypeValue) {
