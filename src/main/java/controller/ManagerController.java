@@ -61,7 +61,7 @@ public class ManagerController {
         if (option.isHasArg() && inputArgs.length < 2 && option.getType() != saveTypeValue) {
             throw new ParseException();
         }
-        if (option.isHasArg()) {
+        if (option.isHasArg() && inputArgs.length != 4) {
             option.addArg(inputArgs[inputArgs.length - 1]);
         }
 
@@ -71,6 +71,7 @@ public class ManagerController {
             if (typeValue != atTypeValue) {
                 throw new ParseException();
             }
+            option.addArg(inputArgs[1]);
             option.addArg(inputArgs[3]);
         }
         return option;
