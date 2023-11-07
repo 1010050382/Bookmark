@@ -42,7 +42,7 @@ public class BookmarkTest {
     @Test
     public void reDo() {
         bookmark.ReDo();
-    }
+    }z
 
     @Test
     public void deleteTitle() {

@@ -42,12 +42,7 @@ public class ManagerService {
         return ManagerServiceInstance.INSTANCE;
     }
 
-    /**
-     * Description: 展示树结构
-     * date: 2022/10/22 19:40
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
+
     public void ShowTree(BookmarkNode bookmarkNode){
 
         System.out.print("#".repeat(bookmarkNode.getLevel()));
@@ -61,13 +56,7 @@ public class ManagerService {
 
     }
 
-    /**
-     * Description: 修改为正确格式的ShowTree
-     * date: 2022/10/30 12:17
-     * @author: Haodong Li
-     * @since: JDK 1.8
 
-    */
     public void ShowTree2(List<BookmarkNode> nodes){
         int size = nodes.size();
         for(int i=0;i<size;i++){
@@ -94,9 +83,37 @@ public class ManagerService {
     public void LsTree(){
         if(manager.getFilePath().isEmpty()==true)
             System.out.println("当前不是打开的文件");
-        else
-            ShowTree2(manager.getHistoryMd().getFirst().getNextLevelBookmarkNode());
+        else{
+
+            File file =new File(manager.getFilePath());
+            String absolutePath = file.getAbsolutePath();
+            String filePath = absolutePath.
+                    substring(0,absolutePath.lastIndexOf(File.separator));
+            printFile(new File(filePath),1);
+        }
+            //ShowTree2(manager.getHistoryMd().getFirst().getNextLevelBookmarkNode());
     }
+
+    public void printFile(File file,int tab) {
+        if (file.isFile()) {
+            System.out.println("您给定的是一个文件"); // 判断给定目录是否是一个合法的目录，如果不是，输出提示
+        } else {
+            File[] fileLists = file.listFiles(); // 如果是目录，获取该目录下的内容集合
+
+            for (int i = 0; i < fileLists.length; i++) { // 循环遍历这个集合内容
+                for (int j = 0; j < tab; j++) {        //输出缩进
+                    System.out.print("|---");
+                }
+
+                System.out.println(fileLists[i].getName());    //输出元素名称
+
+                if (fileLists[i].isDirectory()) {    //判断元素是不是一个目录
+                    printFile(fileLists[i], tab + 1);    //如果是目录，继续调用本方法来输出其子目录，因为是其子目录，所以缩进次数 + 1
+                }
+            }
+        }
+    }
+
 
     public void ReadBookmark(String name){
         manager.setMatchLink(new LinkedList<>());
@@ -105,12 +122,7 @@ public class ManagerService {
             manager.getMatchLink().getFirst().setStatus(true);
         }
     }
-    /**
-     * Description: 保存字符串
-     * date: 2022/10/23 20:50
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
+
 
     public void SaveBookmark(String path){
         try {
@@ -129,28 +141,15 @@ public class ManagerService {
         }
     }
 
-    /**
-     * Description: 生成保存字符串
-     * date: 2022/10/23 20:50
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
     public void GenrateSaveStr(List<BookmarkNode> nodes){
        for(BookmarkNode item : nodes){
-           manager.getSaveStr().append("#".repeat(item.getLevel())+" "+item.getName()+"\r\n");  //Save Title
+           manager.getSaveStr().append("#".repeat(item.getLevel()-1)+" "+item.getName()+"\r\n");  //Save Title
            for (Link link:item.getLinks())
                manager.getSaveStr().append("[" + link.getName() + "]" + "(" + link.getUrl() + ")"+"\r\n");  //Save Bookmark
            GenrateSaveStr(item.getNextLevelBookmarkNode());
        }
     }
 
-    /**
-     * Description: Add 操作,arg1=名称 ,arg2=链接, arg3 = at后的位置
-     * root节点不存储任何信息，只为了遍历方便
-     * date: 2022/10/21 21:11
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
     public void AddBookmark(String arg1,String arg2,String arg3){
         if(arg1.isEmpty())
         {
@@ -164,10 +163,6 @@ public class ManagerService {
 
     /**
      * Description: arg1 = name arg2 = url arg3 = target
-     * date: 2022/10/23 17:43
-     * @author: Haodong Li
-     * @since: JDK 1.8
-
     */
     public void AddLastBookmark(String arg1,String arg2,String arg3){
         if(arg3.isEmpty())
@@ -180,13 +175,7 @@ public class ManagerService {
         }
     }
 
-    /**
-     * Description: arg1 = name agr2 = 父节点名称
-     * date: 2022/10/22 15:13
-     *
-     * @author: Haodong Li
-     * @since: JDK 1.8
-     */
+
 
     public void AddTittle(String arg1,String arg2){
         if(arg2.isEmpty())
@@ -198,13 +187,7 @@ public class ManagerService {
 
     }
 
-    /**
-     * Description: 递归遍历并添加链接
-     * date: 2022/10/22 21:04
-     * @author: Haodong Li
-     * @since: JDK 1.8
 
-    */
     public void FindAndAddBookmark(String name ,List<BookmarkNode> allBookmarkNode,String arg1,String arg2){
         for (BookmarkNode item : allBookmarkNode){
             if(item.getName().equals(name)){
@@ -216,13 +199,9 @@ public class ManagerService {
 
         }
     }
-    /**
-     * Description: 递归遍历并添加标题
-     * date: 2022/10/22 21:04
-     * @author: Haodong Li
-     * @since: JDK 1.8
 
-     */
+
+
     public void FindAndAddTitle(String name ,List<BookmarkNode> allBookmarkNode,String arg1){
         for (BookmarkNode item : allBookmarkNode){
             if(item.getName().equals(name)){
@@ -235,13 +214,8 @@ public class ManagerService {
         }
     }
 
-    /**
-     * Description: 递归遍历并删除所有匹配的书签
-     * date: 2022/10/22 21:04
-     * @author: Haodong Li
-     * @since: JDK 1.8
 
-     */
+
     public void FindAndDeleteBookmark(String name ,BookmarkNode allBookmarkNode){
         allBookmarkNode.getLinks().removeIf(x -> x.getName().equals(name));
 
@@ -250,13 +224,8 @@ public class ManagerService {
         }
     }
 
-    /**
-     * Description: 递归遍历并删除所有匹配的标题
-     * date: 2022/10/22 21:04
-     * @author: Haodong Li
-     * @since: JDK 1.8
 
-     */
+
     public void FindAndDeleteTitle(String name ,BookmarkNode allBookmarkNode){
         allBookmarkNode.getNextLevelBookmarkNode().removeIf(x->x.getName().equals(name));
 
@@ -299,12 +268,6 @@ public class ManagerService {
         }
     }
 
-    /**
-     * Description: 载入Title，并保存最新的节点
-     * date: 2022/10/23 18:19
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
     public void LoadTitle(Integer level,String name){
         manager.setMatchNode(new LinkedList<>());
         FindAllTitleByLevel(level-1,manager.getBookmarkNodes());
@@ -316,12 +279,7 @@ public class ManagerService {
 
     }
 
-    /**
-     * Description: 载入书签链接，并保存到最近的Title
-     * date: 2022/10/23 18:55
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
+
     public void LoadBookmark(Link link){
         if(manager.getLastLoadedNode()!=null)
             manager.getLastLoadedNode().addLink(link);
@@ -339,12 +297,7 @@ public class ManagerService {
         }
     }
 
-    /**
-     * Description: 查找所有匹配的标题并添加到manger.matchNode
-     * date: 2022/10/23 14:38
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
+
     public void FindTitle(String name,List<BookmarkNode> allBookmarkNode){
         for (BookmarkNode item : allBookmarkNode){
             if(item.getName().equals(name)){
@@ -357,12 +310,7 @@ public class ManagerService {
         }
     }
 
-    /**
-     * Description:  查找所有匹配的Link并添加到manger.matchLink
-     * date: 2022/10/23 15:30
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
+
     public void FindBookmark(String name,BookmarkNode allBookmarkNode){
         for(Link link:allBookmarkNode.getLinks()){
             if(link.getName().equals(name))
@@ -374,13 +322,7 @@ public class ManagerService {
             }
     }
 
-    /**
-     * Description: 保存增删操作以支持redo/undo
-     * date: 2022/10/23 13:16
-     * @author: Haodong Li
-     * @since: JDK 1.8
 
-    */
     public void BackUpAddDelete(){
         try {
             String a = manager.getCurCommand();
@@ -393,13 +335,7 @@ public class ManagerService {
 
     }
 
-    /**
-     * Description: 重做
-     * date: 2022/10/23 18:54
-     * @author: Haodong Li
-     * @since: JDK 1.8
 
-    */
     public void Redo(){
         if(manager.getLastCommand()==null|| manager.getLastCommand().isEmpty()){
             return;
@@ -418,13 +354,7 @@ public class ManagerService {
 
     }
 
-    /**
-     * Description: 撤销
-     * date: 2022/10/23 18:54
-     * @author: Haodong Li
-     * @since: JDK 1.8
 
-    */
     public void Undo(){
         if(manager.getHistoryMd()!=null&&manager.getHistoryMd().size()!=0){
             if(manager.getHistoryMd().size()>1){
@@ -438,13 +368,6 @@ public class ManagerService {
         }
     }
 
-    /**
-     * Description: 找到所有对应level的节点
-     * date: 2022/10/23 18:20
-     * @author: Haodong Li
-     * @since: JDK 1.8
-
-    */
     public void FindAllTitleByLevel(Integer level,BookmarkNode allNodes){
         if(allNodes.getLevel()==level)
             manager.getMatchNode().add(allNodes);
@@ -454,12 +377,7 @@ public class ManagerService {
     }
 
 
-    /**
-     * Description: 读取md文件
-     * date: 2022/10/21 15:18
-     * @author: Haodong Li
-     * @since: JDK 1.8
-     */
+
     public void parseMarkdownFile(String filePath) {
         manager.setFilePath(filePath);
         manager.setBookmarkNodes(new BookmarkNode(0, "root"));
@@ -499,12 +417,6 @@ public class ManagerService {
         }
     }
 
-    /**
-     * Description: 解析行
-     * date: 2022/10/21 15:18
-     * @author: Haodong Li
-     * @since: JDK 1.8
-     */
     public String parseMarkdownFileLine(String line) throws BookmarkFileFormatException {
         Matcher titleMatcher = titlePattern.matcher(line);
         Matcher linkMatcher = linkPattern.matcher(line);

@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-/**
- * @author Haodong Li
- * @date 2022年10月24日 11:18
- */
+
 public class SaveUtils {
     public static void TextToFile(final String strFilename, final String strBuffer)
     {

@@ -4,13 +4,10 @@ import exception.ParseException;
 import static controller.ManagerController.*;
 import static controller.ManagerController.manager;
 
-/**
- * @author Haodong Li
- * @date 2022年10月30日 11:17
- */
+
 public class Bookmark {
     public void Open(){
-        Execute("open-file D:/test.bmk");
+        Execute("open-file D:/test/test.bmk");
     }
 
     public void LsTree(){
@@ -26,7 +23,7 @@ public class Bookmark {
     }
 
     public void AddBookmark(){
-        Execute("add-bookmark lhd@http://lhd.com at lhd");
+        Execute("add-bookmark lhd@lhd at test1");
     }
 
     public void ReDo(){

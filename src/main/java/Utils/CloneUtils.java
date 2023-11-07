@@ -2,10 +2,7 @@ package Utils;
 
 import java.io.*;
 
-/**
- * @author Haodong Li
- * @date 2022年10月23日 19:49
- */
+
 public class CloneUtils {
     private CloneUtils() {
         throw new AssertionError();

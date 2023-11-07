@@ -16,8 +16,6 @@ import java.util.regex.Pattern;
 
 public class ManagerController {
 
-//    @Autowired
-//    ManagerService managerService;
 
     public static ManagerService managerService = ManagerService.getInstance();
     public static Manager manager = Manager.getInstance();
@@ -26,12 +24,7 @@ public class ManagerController {
 
 
 
-    /**
-     * Description: 解析输入的命令字符串为String数组
-     * date: 2022/10/21 15:01
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
+
     public static String[] parseInputCommand2StringArray(String input) throws ParseException {
         String[] inputArgs = input.replaceAll("-", "_").split(" ");
         if (inputArgs.length != 1 && inputArgs.length != 2 && inputArgs.length != 4) {
@@ -40,12 +33,7 @@ public class ManagerController {
         return inputArgs;
     }
 
-    /**
-     * Description: 将String数组解析为命令
-     * date: 2022/10/21 15:17
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
+
     public static Option parseInputArgs2Option(String[] inputArgs) throws IllegalArgumentException, ParseException {
         int typeValue = OptionEnum.valueOf(inputArgs[0]).ordinal();
         int atTypeValue = OptionEnum.valueOf("at").ordinal();
@@ -77,12 +65,7 @@ public class ManagerController {
         return option;
     }
 
-    /**
-     * Description: 执行命令
-     * date: 2022/10/21 15:17
-     * @author: Haodong Li
-     * @since: JDK 1.8
-    */
+
     public static void executeOption(Option option) {
         switch (option.getType()) {
             case 0:

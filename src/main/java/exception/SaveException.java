@@ -1,9 +1,6 @@
 package exception;
 
-/**
- * @author Haodong Li
- * @date 2022年10月23日 20:43
- */
+
 public class SaveException extends Exception{
     @Override
     public String toString() {
